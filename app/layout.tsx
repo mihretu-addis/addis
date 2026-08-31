@@ -36,6 +36,7 @@ function OrganizationJsonLd() {
     alternateName: siteConfig.name,
     url: siteConfig.url,
     email: siteConfig.email,
+    telephone: siteConfig.phone,
     description: siteConfig.description,
     address: {
       '@type': 'PostalAddress',

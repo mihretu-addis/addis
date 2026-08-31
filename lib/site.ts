@@ -3,12 +3,12 @@ export const siteConfig = {
   legalName: 'Addis Tech Software PLC',
   title: 'Addis Tech | Software Engineering, AI & ERP Solutions',
   description:
-    'Addis Tech — premier software development firm in Addis Ababa, Ethiopia. Custom web & mobile apps, AI integration, Odoo ERP, and platforms like Novas Booking.',
+    'Founded in 2021 in Addis Ababa, Addis Tech transforms complex business visions into scalable, market-ready technology — custom software, AI automation, Odoo ERP, and platforms like Novas Booking.',
   tagline: 'Engineering High-Performance Digital Solutions',
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://addistech.com',
   locale: 'en_US',
   email: 'info@addistechplc.com',
-  phone: '+251-11-XXX-XXXX',
+  phone: '+251911505992',
   address: {
     city: 'Addis Ababa',
     country: 'Ethiopia',

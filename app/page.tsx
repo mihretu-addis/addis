@@ -99,17 +99,17 @@ export default function Home() {
               
               <div className="relative z-10 max-w-2xl space-y-6">
                 <span className="text-xs uppercase font-mono font-bold tracking-widest text-amber-400">
-                  Featured Client Engagements
+                  Our Work Speaks for Itself
                 </span>
                 <h2 className="text-3xl sm:text-4xl font-sans font-extrabold tracking-tight pt-1">
-                  High-Performance Software Delivered On-Budget & On-Time.
+                  High-Impact Platforms. World-Class Experiences.
                 </h2>
                 <p className="text-sm sm:text-base text-blue-100 dark:text-neutral-400 leading-relaxed font-sans">
-                  From Novas Booking — our next-gen hotel and travel platform at{' '}
+                  From Novas Booking — our next-gen hotel and property platform at{' '}
                   <a href="https://novasbooking.com/" target="_blank" rel="noopener noreferrer" className="text-amber-300 hover:underline">
                     novasbooking.com
                   </a>
-                  — to freight logistics and enterprise ERP, we deploy reliable, production-ready technology.
+                  {' '}— to smart logistics, ride-sharing, and Odoo ERP, we deliver production-ready technology on budget and on time.
                 </p>
                 <div className="pt-4 flex flex-col sm:flex-row gap-4">
                   <Link 

@@ -14,7 +14,7 @@ export const resources = {
         badge: "Empowering East Africa's Digital Renaissance",
         title: "Engineering High-Performance",
         titleAccent: "Digital Solutions",
-        description: "Founded in 2021 and headquartered in the heart of Addis Ababa, Ethiopia, Addis Tech is a premier software development firm dedicated to engineering scalable, market-ready technology to bridge regional potential with global standards.",
+        description: "Founded in 2021 and headquartered in Addis Ababa, Ethiopia, Addis Tech is a premier software development firm dedicated to transforming complex business visions into scalable, market-ready technology — from AI-driven automation to world-class booking platforms — bridging regional potential with global standards.",
         statsCompleted: "Enterprise Projects Completed",
         statsYears: "Years of Engineering Excellence",
         statsReliability: "Uptime & Scalability Reliability",
@@ -37,44 +37,44 @@ export const resources = {
       },
       portfolio: {
         title: "Featured Portfolio",
-        subtitle: "We have delivered high-impact platforms combining complex backend logic with world-class user experiences.",
+        subtitle: "Our work speaks for itself. We have delivered high-impact platforms that combine complex backend logic with world-class user experiences.",
         badge: "Excellence in Action",
         vision: "The Vision",
         solution: "The Solution",
         p_integration: "Payment Integration",
         impact: "The Impact",
         item1: {
-          title: "Novas Booking: Next-Gen Hotel & Travel Booking System",
-          visionText: "Novas is a next-generation booking platform that connects travelers with great places to stay.",
-          solutionText: "An online hotel and travel booking platform — live at novasbooking.com — built for fast property discovery, real-time availability, and seamless reservations from search to checkout.",
-          paymentText: "Integrated international and local payment options (Visa, Mastercard, Stripe, Telebirr, CBE Birr) so guests can book confidently across markets."
+          title: "Novas Booking — Next-Gen Hotel & Property Booking Platform",
+          visionText: "A Booking.com-level ecosystem designed for the global travel market — Novas connects travelers with great places to stay.",
+          solutionText: "An enterprise-grade platform built on a cutting-edge tech stack for sub-second latency and massive scalability. Features a sophisticated inventory engine, high-speed search filters, and real-time availability sync — live at novasbooking.com.",
+          paymentText: "Fully integrated with International (Visa, Mastercard, Stripe) and Local Ethiopian mobile payment methods (Telebirr, CBE Birr), ensuring a seamless transaction experience for every user."
         },
         item2: {
           title: "Smart Logistics & Freight Marketplace",
-          visionText: "A high-performance logistics hub connecting shippers with a verified network of carriers.",
-          solutionText: "Optimizes the regional supply chain through automated load matching, real-time GPS fleet tracking, and automated digital document workflows.",
-          impactText: "Streamlines freight finance cycles with secure, multi-method payment integrations for instant settlements and full transit transparency."
+          visionText: "A high-performance logistics hub connecting shippers with a verified network of transport providers.",
+          solutionText: "Utilizing modern cloud architecture, this platform optimizes the supply chain through automated load matching, real-time GPS fleet tracking, and digital document management.",
+          impactText: "Streamlines the financial lifecycle of freight with secure, multi-method payment integrations for instant settlements and transparency."
         },
         item3: {
-          title: "Ride-Sharing & Urban Mobility Engine",
-          solutionText: "A highly scalable, real-time ride-hailing application featuring advanced live geolocation tracking, predictive dynamic pricing algorithms, and multi-channel payment gateways."
+          title: "Ride-Sharing & Urban Mobility",
+          solutionText: "A highly scalable, real-time ride-hailing application featuring advanced geolocation tracking, dynamic pricing algorithms, and multi-channel payment gateways to revolutionize urban transport."
         },
         item4: {
           title: "Intelligent Delivery Service Platform",
-          solutionText: "An end-to-end logistics platform for last-mile mastery, integrating intelligent real-time route optimization and automated dispatching for rapid delivery cycles."
+          solutionText: "An end-to-end logistics platform for last-mile mastery, integrating intelligent route optimization and automated dispatching for rapid, reliable delivery."
         },
         item5: {
-          title: "Custom Odoo ERP Enterprise Solution",
-          solutionText: "Unifying fragmented business processes through a heavily customized Odoo ecosystem, bringing finance, inventory, CRM, and human resource modules into one intuitive panel."
+          title: "Custom Odoo ERP Implementation",
+          solutionText: "Unifying fragmented business processes through a heavily customized Odoo ecosystem, bringing finance, inventory, and CRM into one intuitive, centralized dashboard."
         },
         item6: {
-          title: "High-Conversion Web Systems & Cloud Portals",
-          solutionText: "Responsive, SEO-optimized web systems and secure cloud-based service portals that provide 24/7 accessibility with a modernized user-centric design."
+          title: "High-Conversion Custom Websites & Digital Services",
+          solutionText: "Responsive, SEO-optimized web platforms and secure cloud-based service portals that provide 24/7 accessibility and a modernized user-centric experience."
         }
       },
       techStack: {
-        title: "Our Cutting-Edge Tech Stack",
-        subtitle: "We stay at the bleeding edge to ensure your digital product is reliable, modern, and future-proof."
+        title: "Our Tech Stack",
+        subtitle: "We stay at the bleeding edge to ensure your product is future-proof.",
       },
       whyUs: {
         title: "Why Partner With Addis Tech?",
@@ -83,13 +83,13 @@ export const resources = {
         highlightTitle: "100% Client-Centric Deliveries",
         highlightDesc: "Every deployment strictly adheres to zero-downtime, safe migration standards.",
         item1Title: "Agile Excellence",
-        item1Desc: "We iterate quickly and deploy incrementally, ensuring your product reaches the market faster and adapts dynamically.",
+        item1Desc: "We iterate quickly, ensuring your product reaches the market faster.",
         item2Title: "Scalability First",
-        item2Desc: "Our software architectures are engineered to scale seamlessly from 1,000 to over 1,000,000+ users without degradation.",
+        item2Desc: "Our architectures are built to grow from 1,000 to 1,000,000+ users without breaking.",
         item3Title: "Security Focused",
-        item3Desc: "We implement rigorous, bank-grade data protection, zero-trust authentication, and secure payment layers in every build.",
-        item4Title: "Local Insight, Global Standards",
-        item4Desc: "We understand the nuances of East African commerce and user behaviors while designing to world-class 'Booking.com' standards."
+        item3Desc: "We implement rigorous data protection and secure payment protocols in every build.",
+        item4Title: "Local Expertise, Global Vision",
+        item4Desc: "We understand the nuances of the Ethiopian market while delivering Booking.com-level quality."
       },
       contact: {
         title: "Let's Build the Future Together",
@@ -117,7 +117,7 @@ export const resources = {
       },
       footer: {
         rights: "All rights reserved. Engineering high-performance tech since 2021.",
-        slogan: "Empowering the digital renaissance in East Africa block by block.",
+        slogan: "Empowering the Digital Renaissance in East Africa.",
         ecosystem: "Ecosystem",
         company: "Company",
         connect: "Connect Internationally",
@@ -215,8 +215,8 @@ export const resources = {
         item2Desc: "የእኛ አርክቴክቸር ወይም የሶፍትዌር መዋቅር ሳይስተጓጎል ከ1,000 እስከ 1,000,000+ ተጠቃሚዎችን እንዲያገለግል ተደርጎ የተነደፈ ነው።",
         item3Title: "በደህንነት ላይ ያተኮረ",
         item3Desc: "በእያንዳንዱ ግንባታችን ላይ ጠንካራ የዳታ ጥበቃ፣ ከስጋት የጸዳ ማረጋገጫ እና ደህንነታቸው የተጠበቁ የክፍያ መንገዶችን እንዘረጋለን።",
-        item4Title: "አገር በቀል ግንዛቤ፣ ዓለም አቀፍ ደረጃ",
-        item4Desc: "የኢትዮጵያን የንግድ ህጎች እና የተጠቃሚዎች ባህሪ በሚገባ በመረዳት ወደር የሌለው የ'Booking.com-ደረጃ' ጥራት እናቀርባለን።"
+        item4Title: "አገር በቀል ባለሙያ, ዓለም አቀፍ ራዕይ",
+        item4Desc: "የኢትዮጵያን ገበያ በሙሉ በመረዳት የ'Booking.com-ደረጃ' ጥራት እናቀርባለን።"
       },
       contact: {
         title: "የወደፊቱን አብረን እንገንባ",
