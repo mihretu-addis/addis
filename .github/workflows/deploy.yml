@@ -1,93 +1,66 @@
-# Addis Tech website CI/CD
-# - PRs + pushes: Next build; PRs also run a GHCR-less Docker build smoke test.
-# - Push dev  → SSH to stage VM: git pull + docker compose build on server (no registry images).
-# - Push main → build/push GHCR image + SSH deploy with pre-built image + rollback.
+# Production deploy only — push to main.
+# Nginx proxies host port 3030 → container 3000.
 #
-# Deploys to a separate folder from the admin dashboard. Nginx proxies this app on host port 3030.
+# Required repo secret (base64 shell file):
+#   WEBSITE_PROD_DEPLOY_BASE64
 #
-# Repo secrets (base64 of a shell-sourcable file):
+# Bundle must include:
 #   SSH_HOST, SSH_USERNAME, SSH_PORT, SSH_KEY, PROJECT_FOLDER
+#   GHCR_TOKEN  (PAT with read:packages — used on the VPS to pull the image)
+#   GHCR_USER   (GitHub username that owns the token; optional, defaults to repo owner)
 #
-#   WEBSITE_STAGE_DEPLOY_BASE64 — refs/heads/dev (SSH + PROJECT_FOLDER; optional GIT_REMOTE, DOCKER_COMPOSE_FILE)
-#   WEBSITE_PROD_DEPLOY_BASE64  — refs/heads/main (SSH + PROJECT_FOLDER; optional DEPLOY_COMPOSE_SERVICE, DEPLOY_CONTAINER_NAME)
-#   GHCR_TOKEN — production image pull on the VPS
-#
-# PROJECT_FOLDER must not be the admin dashboard path. Default if omitted: /opt/addis-tach-web
-# Optional repo variable override: WEBSITE_PROJECT_FOLDER
-#
-# Optional CI build-time overrides:
+# Optional repo variables (build-time):
 #   NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_API_URL
-#
 
-name: Website CI/CD
+name: Deploy Website
 
 on:
   push:
-    branches: [dev, main]
+    branches: [main]
   pull_request:
-    branches: [dev, main]
+    branches: [main]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   REGISTRY: ghcr.io
-  NODE_VERSION: '22'
   APP_PORT: '3030'
   DEFAULT_PROJECT_FOLDER: /opt/addis-tach-web
-  COMPOSE_SERVICE: web
-  COMPOSE_CONTAINER: addis-tach-web
 
 jobs:
-  ci:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: write
+    outputs:
+      image: ${{ env.IMAGE_REPO }}:${{ github.sha }}
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Set image repository
+        run: |
+          repo_lower="$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')"
+          echo "IMAGE_REPO=ghcr.io/${repo_lower}" >> "${GITHUB_ENV}"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        if: github.event_name == 'push'
+        uses: docker/login-action@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build (standalone)
-        env:
-          NEXT_TELEMETRY_DISABLED: '1'
-          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
-          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
-        run: npm run build
-
-  docker-build-scan:
-    if: ${{ github.event_name == 'pull_request' }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
-    env:
-      IMAGE_NAME_LOWER: ''
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set lowercase image name
-        run: echo "IMAGE_NAME_LOWER=ghcr.io/${GITHUB_REPOSITORY,,}" >> "${GITHUB_ENV}"
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      # CI-only: prove Dockerfile + Compose-time args build; do not publish.
-      - name: Build image (dry run — no registry push)
+      - name: Build image
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: Dockerfile
-          push: false
+          push: ${{ github.event_name == 'push' }}
           provenance: false
           sbom: false
           platforms: linux/amd64
@@ -95,241 +68,108 @@ jobs:
             NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }}
             NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL }}
           tags: |
-            ${{ env.IMAGE_NAME_LOWER }}:${{ github.sha }}
+            ${{ env.IMAGE_REPO }}:latest
+            ${{ env.IMAGE_REPO }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  build-push-prod:
-    name: Build & push production image
-    needs: ci
-    if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+  deploy:
+    name: Deploy to production
+    needs: build
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set production image repository (separate GHCR package)
-        run: |
-          repo_lower="$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')"
-          echo "IMAGE_REPO=ghcr.io/${repo_lower}-prod" >> "${GITHUB_ENV}"
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and push production image (linux/amd64)
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: Dockerfile
-          push: true
-          provenance: false
-          sbom: false
-          platforms: linux/amd64
-          build-args: |
-            NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL_PROD || vars.NEXT_PUBLIC_API_URL }}
-            NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL_PROD || vars.NEXT_PUBLIC_SITE_URL }}
-          tags: |
-            ${{ env.IMAGE_REPO }}:${{ github.sha }}
-            ${{ env.IMAGE_REPO }}:latest
-          cache-from: type=gha,scope=prod
-          cache-to: type=gha,mode=max,scope=prod
-
-  deploy-stage:
-    name: Deploy to stage (git pull)
-    needs: ci
-    if: ${{ github.event_name == 'push' && github.ref_name == 'dev' }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
-    steps:
-      - name: Decode stage deploy bundle (base64)
-        env:
-          CREDS_B64: ${{ secrets.WEBSITE_STAGE_DEPLOY_BASE64 }}
-        run: |
-          if [ -z "${CREDS_B64}" ]; then
-            echo "Missing secret WEBSITE_STAGE_DEPLOY_BASE64 (stage server SSH + PROJECT_FOLDER)" >&2
-            exit 1
-          fi
-          printf '%s\n' "${CREDS_B64}" | base64 -d > .secrets.env
-
-      - name: Hydrate SSH + project env from bundle
-        run: |
-          set -a
-          # shellcheck disable=SC1091
-          source .secrets.env
-          set +a
-
-          website_folder="${{ vars.WEBSITE_PROJECT_FOLDER }}"
-          if [ -n "${website_folder}" ]; then
-            PROJECT_FOLDER="${website_folder}"
-          fi
-          PROJECT_FOLDER="${PROJECT_FOLDER:-${{ env.DEFAULT_PROJECT_FOLDER }}}"
-
-          {
-            echo "SSH_HOST=${SSH_HOST}"
-            echo "SSH_USERNAME=${SSH_USERNAME}"
-            echo "SSH_PORT=${SSH_PORT:-22}"
-            echo "PROJECT_FOLDER=${PROJECT_FOLDER}"
-            echo "GIT_REMOTE=${GIT_REMOTE:-origin}"
-            echo "DOCKER_COMPOSE_FILE=${DOCKER_COMPOSE_FILE:-docker-compose.yml}"
-            echo "GIT_REF=${{ github.ref_name }}"
-            echo "APP_PORT=${{ env.APP_PORT }}"
-          } >> "${GITHUB_ENV}"
-
-          {
-            echo "SSH_KEY<<REPO_DEPLOY_EOF"
-            echo "${SSH_KEY}"
-            echo "REPO_DEPLOY_EOF"
-          } >> "${GITHUB_ENV}"
-
-      - name: Deploy via git pull on server
-        uses: appleboy/ssh-action@v1.2.4
-        with:
-          host: ${{ env.SSH_HOST }}
-          username: ${{ env.SSH_USERNAME }}
-          port: ${{ env.SSH_PORT }}
-          key: ${{ env.SSH_KEY }}
-          command_timeout: 15m
-          envs: GIT_REMOTE,GIT_REF,DOCKER_COMPOSE_FILE,APP_PORT
-          script: |
-            set -euo pipefail
-            mkdir -p "${{ env.PROJECT_FOLDER }}"
-            cd "${{ env.PROJECT_FOLDER }}"
-
-            chmod +x scripts/deploy-stage-git-pull.sh
-            ./scripts/deploy-stage-git-pull.sh
-
-      - name: Remove local credential bundle
-        if: always()
-        run: rm -f .secrets.env
-
-  deploy-production:
-    name: Deploy to production (main branch)
-    needs: build-push-prod
-    if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Decode production deploy bundle (base64)
+      - name: Load deploy credentials
         env:
           CREDS_B64: ${{ secrets.WEBSITE_PROD_DEPLOY_BASE64 }}
         run: |
           if [ -z "${CREDS_B64}" ]; then
-            echo "Missing secret WEBSITE_PROD_DEPLOY_BASE64 (production server SSH + PROJECT_FOLDER)" >&2
+            echo "::error::Missing secret WEBSITE_PROD_DEPLOY_BASE64" >&2
             exit 1
           fi
           printf '%s\n' "${CREDS_B64}" | base64 -d > .secrets.env
-
-      - name: Hydrate SSH + project env from bundle
-        run: |
           set -a
           # shellcheck disable=SC1091
           source .secrets.env
           set +a
-
-          website_folder="${{ vars.WEBSITE_PROJECT_FOLDER }}"
-          if [ -n "${website_folder}" ]; then
-            PROJECT_FOLDER="${website_folder}"
+          if [ -z "${GHCR_TOKEN:-}" ]; then
+            echo "::error::GHCR_TOKEN must be inside WEBSITE_PROD_DEPLOY_BASE64 (PAT with read:packages)" >&2
+            exit 1
           fi
           PROJECT_FOLDER="${PROJECT_FOLDER:-${{ env.DEFAULT_PROJECT_FOLDER }}}"
-
+          GHCR_USER="${GHCR_USER:-${{ github.repository_owner }}}"
+          repo_lower="$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')"
           {
             echo "SSH_HOST=${SSH_HOST}"
             echo "SSH_USERNAME=${SSH_USERNAME}"
             echo "SSH_PORT=${SSH_PORT:-22}"
             echo "PROJECT_FOLDER=${PROJECT_FOLDER}"
-            echo "DEPLOY_COMPOSE_SERVICE=${DEPLOY_COMPOSE_SERVICE:-${{ env.COMPOSE_SERVICE }}}"
-            echo "DEPLOY_CONTAINER_NAME=${DEPLOY_CONTAINER_NAME:-${{ env.COMPOSE_CONTAINER }}}"
-            echo "APP_PORT=${{ env.APP_PORT }}"
+            echo "GHCR_USER=${GHCR_USER}"
+            echo "APP_IMAGE=ghcr.io/${repo_lower}:${GITHUB_SHA}"
           } >> "${GITHUB_ENV}"
-
           {
-            echo "SSH_KEY<<REPO_DEPLOY_EOF"
+            echo "SSH_KEY<<EOF"
             echo "${SSH_KEY}"
-            echo "REPO_DEPLOY_EOF"
+            echo "EOF"
+            echo "GHCR_TOKEN<<EOF"
+            echo "${GHCR_TOKEN}"
+            echo "EOF"
           } >> "${GITHUB_ENV}"
 
-      - name: Set production image + compose env for SSH deploy
-        run: |
-          repo_lower="$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')"
-          image_repo="ghcr.io/${repo_lower}-prod"
-          {
-            echo "APP_IMAGE=${image_repo}:${GITHUB_SHA}"
-            echo "IMAGE_REPO=${image_repo}"
-            echo "GHCR_USER=${GITHUB_ACTOR}"
-            echo 'DOCKER_COMPOSE_FILE=docker-compose.prod.yml'
-          } >> "${GITHUB_ENV}"
-
-      - name: Ensure remote scripts directory exists
-        uses: appleboy/ssh-action@v1.2.4
-        with:
-          host: ${{ env.SSH_HOST }}
-          username: ${{ env.SSH_USERNAME }}
-          port: ${{ env.SSH_PORT }}
-          key: ${{ env.SSH_KEY }}
-          script: mkdir -p "${{ env.PROJECT_FOLDER }}/scripts"
-
-      - name: Copy deployment scripts (strip leading path segments)
+      - name: Copy compose file to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ env.SSH_HOST }}
           username: ${{ env.SSH_USERNAME }}
           port: ${{ env.SSH_PORT }}
           key: ${{ env.SSH_KEY }}
-          source: scripts/deploy-with-rollback.sh,scripts/docker-retain-images.sh
-          target: ${{ env.PROJECT_FOLDER }}/scripts/
-          strip_components: 1
-
-      - name: Copy docker-compose.prod.yml
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ env.SSH_HOST }}
-          username: ${{ env.SSH_USERNAME }}
-          port: ${{ env.SSH_PORT }}
-          key: ${{ env.SSH_KEY }}
-          source: docker-compose.prod.yml
+          source: docker-compose.yml
           target: ${{ env.PROJECT_FOLDER }}/
 
-      - name: Deploy to production (compose, health-checked, auto rollback)
+      - name: Deploy container
         uses: appleboy/ssh-action@v1.2.4
-        env:
-          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
         with:
           host: ${{ env.SSH_HOST }}
           username: ${{ env.SSH_USERNAME }}
           port: ${{ env.SSH_PORT }}
           key: ${{ env.SSH_KEY }}
-          envs: APP_IMAGE,IMAGE_REPO,GHCR_USER,GHCR_TOKEN,DOCKER_COMPOSE_FILE,DEPLOY_COMPOSE_SERVICE,DEPLOY_CONTAINER_NAME,APP_PORT
+          command_timeout: 10m
+          envs: APP_IMAGE,GHCR_USER,GHCR_TOKEN,APP_PORT
           script: |
             set -euo pipefail
-            cd "${{ env.PROJECT_FOLDER }}" || exit 1
+            FOLDER="${{ env.PROJECT_FOLDER }}"
+            mkdir -p "${FOLDER}"
+            cd "${FOLDER}"
 
-            printf '%s\n' "${GHCR_TOKEN}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin
+            # Non-interactive GHCR login (empty token causes "Cannot perform an interactive login")
+            if [ -z "${GHCR_TOKEN}" ]; then
+              echo "GHCR_TOKEN is empty" >&2
+              exit 1
+            fi
+            echo "${GHCR_TOKEN}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin
 
-            chmod +x scripts/deploy-with-rollback.sh scripts/docker-retain-images.sh
-            export DOCKER_COMPOSE_FILE="${DOCKER_COMPOSE_FILE}"
-            export DEPLOY_COMPOSE_SERVICE="${DEPLOY_COMPOSE_SERVICE}"
-            export DEPLOY_CONTAINER_NAME="${DEPLOY_CONTAINER_NAME}"
-            export IMAGE_REPO="${IMAGE_REPO}"
-            export APP_PORT="${APP_PORT}"
-            export PRUNE_DANGLING=1
-            ./scripts/deploy-with-rollback.sh "${APP_IMAGE}"
+            docker pull "${APP_IMAGE}"
 
-      - name: Remove local credential bundle
+            if [ -f .env ] && grep -q '^APP_IMAGE=' .env; then
+              sed -i.bak "s|^APP_IMAGE=.*|APP_IMAGE=${APP_IMAGE}|" .env
+            else
+              echo "APP_IMAGE=${APP_IMAGE}" >> .env
+            fi
+            if grep -q '^APP_PORT=' .env 2>/dev/null; then
+              sed -i.bak "s|^APP_PORT=.*|APP_PORT=${APP_PORT}|" .env
+            else
+              echo "APP_PORT=${APP_PORT}" >> .env
+            fi
+
+            export APP_IMAGE APP_PORT
+            docker compose up -d --pull always --force-recreate
+
+            docker image prune -f
+            echo "Deployed ${APP_IMAGE} on port ${APP_PORT}"
+
+      - name: Cleanup
         if: always()
         run: rm -f .secrets.env
