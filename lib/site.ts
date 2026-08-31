@@ -1,3 +1,15 @@
+const DEFAULT_SITE_URL = 'https://addistech.com';
+
+function resolveSiteUrl(): string {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (!raw) return DEFAULT_SITE_URL;
+  try {
+    return new URL(raw).origin;
+  } catch {
+    return DEFAULT_SITE_URL;
+  }
+}
+
 export const siteConfig = {
   name: 'Addis Tech',
   legalName: 'Addis Tech Software PLC',
@@ -5,7 +17,7 @@ export const siteConfig = {
   description:
     'Founded in 2021 in Addis Ababa, Addis Tech transforms complex business visions into scalable, market-ready technology — custom software, AI automation, Odoo ERP, and platforms like Novas Booking.',
   tagline: 'Engineering High-Performance Digital Solutions',
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://addistech.com',
+  url: resolveSiteUrl(),
   locale: 'en_US',
   email: 'info@addistechplc.com',
   phone: '+251911505992',

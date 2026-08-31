@@ -14,11 +14,12 @@ RUN mkdir -p public
 
 # NEXT_PUBLIC_* must be present at build time for Next.js.
 # Pass these via --build-arg / compose build.args (do not COPY .env in CI).
-ARG NEXT_PUBLIC_API_URL
-ARG NEXT_PUBLIC_SITE_URL
+ARG NEXT_PUBLIC_API_URL=
+ARG NEXT_PUBLIC_SITE_URL=https://addistech.com
 
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN npm run build
 
