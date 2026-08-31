@@ -1,13 +1,12 @@
 # Production deploy only — push to main.
 # Nginx proxies host port 3030 → container 3000.
 #
-# Required repo secret (base64 shell file):
-#   WEBSITE_PROD_DEPLOY_BASE64
+# Required repository secrets:
+#   SSH_HOST, SSH_USERNAME, SSH_KEY
 #
-# Bundle must include:
-#   SSH_HOST, SSH_USERNAME, SSH_PORT, SSH_KEY, PROJECT_FOLDER
-#   GHCR_TOKEN  (PAT with read:packages — used on the VPS to pull the image)
-#   GHCR_USER   (GitHub username that owns the token; optional, defaults to repo owner)
+# Optional repository secrets:
+#   SSH_PORT         (default: 22)
+#   PROJECT_FOLDER   (default: /opt/addis-tach-web)
 #
 # Optional repo variables (build-time):
 #   NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_API_URL
@@ -35,8 +34,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-    outputs:
-      image: ${{ env.IMAGE_REPO }}:${{ github.sha }}
 
     steps:
       - uses: actions/checkout@v4
@@ -78,79 +75,48 @@ jobs:
     needs: build
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Load deploy credentials
-        env:
-          CREDS_B64: ${{ secrets.WEBSITE_PROD_DEPLOY_BASE64 }}
+      - name: Set deploy variables
         run: |
-          if [ -z "${CREDS_B64}" ]; then
-            echo "::error::Missing secret WEBSITE_PROD_DEPLOY_BASE64" >&2
-            exit 1
-          fi
-          printf '%s\n' "${CREDS_B64}" | base64 -d > .secrets.env
-          set -a
-          # shellcheck disable=SC1091
-          source .secrets.env
-          set +a
-          if [ -z "${GHCR_TOKEN:-}" ]; then
-            echo "::error::GHCR_TOKEN must be inside WEBSITE_PROD_DEPLOY_BASE64 (PAT with read:packages)" >&2
-            exit 1
-          fi
-          PROJECT_FOLDER="${PROJECT_FOLDER:-${{ env.DEFAULT_PROJECT_FOLDER }}}"
-          GHCR_USER="${GHCR_USER:-${{ github.repository_owner }}}"
           repo_lower="$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')"
-          {
-            echo "SSH_HOST=${SSH_HOST}"
-            echo "SSH_USERNAME=${SSH_USERNAME}"
-            echo "SSH_PORT=${SSH_PORT:-22}"
-            echo "PROJECT_FOLDER=${PROJECT_FOLDER}"
-            echo "GHCR_USER=${GHCR_USER}"
-            echo "APP_IMAGE=ghcr.io/${repo_lower}:${GITHUB_SHA}"
-          } >> "${GITHUB_ENV}"
-          {
-            echo "SSH_KEY<<EOF"
-            echo "${SSH_KEY}"
-            echo "EOF"
-            echo "GHCR_TOKEN<<EOF"
-            echo "${GHCR_TOKEN}"
-            echo "EOF"
-          } >> "${GITHUB_ENV}"
+          echo "APP_IMAGE=ghcr.io/${repo_lower}:${GITHUB_SHA}" >> "${GITHUB_ENV}"
+          echo "GHCR_USER=${{ github.actor }}" >> "${GITHUB_ENV}"
+          echo "PROJECT_DIR=${{ secrets.PROJECT_FOLDER || env.DEFAULT_PROJECT_FOLDER }}" >> "${GITHUB_ENV}"
 
       - name: Copy compose file to server
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ env.SSH_HOST }}
-          username: ${{ env.SSH_USERNAME }}
-          port: ${{ env.SSH_PORT }}
-          key: ${{ env.SSH_KEY }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.SSH_PORT || '22' }}
+          key: ${{ secrets.SSH_KEY }}
           source: docker-compose.yml
-          target: ${{ env.PROJECT_FOLDER }}/
+          target: ${{ secrets.PROJECT_FOLDER || env.DEFAULT_PROJECT_FOLDER }}/
 
       - name: Deploy container
         uses: appleboy/ssh-action@v1.2.4
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          host: ${{ env.SSH_HOST }}
-          username: ${{ env.SSH_USERNAME }}
-          port: ${{ env.SSH_PORT }}
-          key: ${{ env.SSH_KEY }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.SSH_PORT || '22' }}
+          key: ${{ secrets.SSH_KEY }}
           command_timeout: 10m
           envs: APP_IMAGE,GHCR_USER,GHCR_TOKEN,APP_PORT
           script: |
             set -euo pipefail
-            FOLDER="${{ env.PROJECT_FOLDER }}"
+            FOLDER="${{ secrets.PROJECT_FOLDER || env.DEFAULT_PROJECT_FOLDER }}"
             mkdir -p "${FOLDER}"
             cd "${FOLDER}"
 
-            # Non-interactive GHCR login (empty token causes "Cannot perform an interactive login")
-            if [ -z "${GHCR_TOKEN}" ]; then
-              echo "GHCR_TOKEN is empty" >&2
-              exit 1
-            fi
             echo "${GHCR_TOKEN}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin
-
             docker pull "${APP_IMAGE}"
 
             if [ -f .env ] && grep -q '^APP_IMAGE=' .env; then
@@ -166,10 +132,5 @@ jobs:
 
             export APP_IMAGE APP_PORT
             docker compose up -d --pull always --force-recreate
-
             docker image prune -f
             echo "Deployed ${APP_IMAGE} on port ${APP_PORT}"
-
-      - name: Cleanup
-        if: always()
-        run: rm -f .secrets.env
