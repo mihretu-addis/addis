@@ -44,10 +44,10 @@ export const resources = {
         p_integration: "Payment Integration",
         impact: "The Impact",
         item1: {
-          title: "Next-Gen Hotel & Property Booking Ecosystem",
-          visionText: "A Booking.com-level ecosystem designed for the global travel and rental marketplace.",
-          solutionText: "An enterprise-grade platform built to ensure sub-second latency and massive scalability. Features a sophisticated inventory engine, high-speed search filters, and real-time availability synchronization.",
-          paymentText: "Fully integrated with International (Visa, Mastercard, Stripe) and Local Ethiopian mobile payment methods (Telebirr, CBE Birr) for absolute ease."
+          title: "Novas Booking: Next-Gen Hotel & Travel Booking System",
+          visionText: "Novas is a next-generation booking platform that connects travelers with great places to stay.",
+          solutionText: "An online hotel and travel booking platform — live at novasbooking.com — built for fast property discovery, real-time availability, and seamless reservations from search to checkout.",
+          paymentText: "Integrated international and local payment options (Visa, Mastercard, Stripe, Telebirr, CBE Birr) so guests can book confidently across markets."
         },
         item2: {
           title: "Smart Logistics & Freight Marketplace",
@@ -171,10 +171,10 @@ export const resources = {
         p_integration: "የክፍያ ውህደት",
         impact: "ተጽዕኖ",
         item1: {
-          title: "ቀጣይ ትውልድ የሆቴል እና የቤት ማስያዣ ምህዳር",
-          visionText: "ለዓለም አቀፉ የጉዞ እና የኪራይ ገበያ የተነደፈ የ 'Booking.com-ደረጃ' ያለው ትልቅ ፕላትፎርም።",
-          solutionText: "በጣም አነስተኛ መዘግየት (sub-second latency) እና ግዙፍ ልኬትን ለማረጋገጥ በዘመናዊ የቴክኖሎጂ ቁልል ላይ የተገነባ የድርጅት ደረጃ ፕላትፎርም። ዘመናዊ የእቃ ዝርዝር ሞተር፣ ከፍተኛ ፍጥነት ያለው የፍለጋ ማጣሪያዎች እና የእውነተኛ ጊዜ ተገኝነት ማመሳሰልን ያካትታል።",
-          paymentText: "ከዓለም አቀፍ (Visa, Mastercard, Stripe) እና ከአገር ውስጥ የኢትዮጵያ የሞባይል ክፍያ አማራጮች (Telebirr, CBE Birr) ጋር ሙሉ በሙሉ የተዋሃደ።"
+          title: "Novas Booking: ቀጣይ ትውልድ የሆቴል እና የጉዞ ማስያዣ ስርዓት",
+          visionText: "Novas ጉዞ ተወዳጆችን ከእጅግ ጥሩ የመኖሪያ ቦታዎች ጋር የሚያገናኝ ቀጣይ ትውልድ የማስያዣ መድረክ ነው።",
+          solutionText: "በ novasbooking.com ላይ በቀጥታ የሚሰራ የሆቴል እና የጉዞ ማስያዣ መድረክ — ፈጣን የንብረት ፍለጋ፣ የእውነተኛ ጊዜ ተገኝነት እና ከፍለጋ እስከ ክፍያ ድረስ መሰላል ተሞክሮ።",
+          paymentText: "ከዓለም አቀፍ (Visa, Mastercard, Stripe) እና ከአገር ውስጥ (Telebirr, CBE Birr) ክፍያ አማራጮች ጋር የተዋሃደ ለግልጽ እና ቀልጣፋ ማስያዣ።"
         },
         item2: {
           title: "ብልህ የሎጅስቲክስ እና የጭነት ማጓጓዣ የገበያ ቦታ",

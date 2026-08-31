@@ -105,7 +105,11 @@ export default function Home() {
                   High-Performance Software Delivered On-Budget & On-Time.
                 </h2>
                 <p className="text-sm sm:text-base text-blue-100 dark:text-neutral-400 leading-relaxed font-sans">
-                  From sub-second latency rental ecosystems supporting Telebirr & Visa, to freight logistics fleet orchestrations, we deploy reliable, production-ready enterprise technology.
+                  From Novas Booking — our next-gen hotel and travel platform at{' '}
+                  <a href="https://novasbooking.com/" target="_blank" rel="noopener noreferrer" className="text-amber-300 hover:underline">
+                    novasbooking.com
+                  </a>
+                  — to freight logistics and enterprise ERP, we deploy reliable, production-ready technology.
                 </p>
                 <div className="pt-4 flex flex-col sm:flex-row gap-4">
                   <Link 

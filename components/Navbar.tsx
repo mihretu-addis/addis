@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/context/ThemeContext';
-import { Menu, X, Sun, Moon, Globe, Terminal } from 'lucide-react';
+import { Menu, X, Sun, Moon, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Link from 'next/link';
+import BrandLogo from '@/components/BrandLogo';
 
 export default function Navbar() {
   const { t, i18n } = useTranslation();
@@ -46,18 +47,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between">
           
           {/* Logo */}
-          <Link
-            id="nav-logo"
-            href="/"
-            className="flex items-center space-x-2 text-xl font-bold tracking-tight text-white transition-all hover:opacity-90"
-          >
-            <div className="p-2 rounded-lg bg-white/10 dark:bg-blue-600/25 border border-white/10 text-amber-400">
-              <Terminal className="h-5 w-5" />
-            </div>
-            <span>
-              Addis<span className="text-amber-400">Tech</span>
-            </span>
-          </Link>
+          <BrandLogo id="nav-logo" />
  
           {/* Desktop Navigation */}
           <nav id="desktop-nav" className="hidden md:flex items-center space-x-6">

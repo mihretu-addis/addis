@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Building2, Truck, Car, ShoppingBag, Landmark, Monitor, ShieldCheck, Check } from 'lucide-react';
+import { Building2, Truck, Car, ShoppingBag, Landmark, Monitor, ShieldCheck, Check, ExternalLink } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Image from 'next/image';
 
@@ -12,18 +12,19 @@ export default function PortfolioSection() {
 
   const portfolioItems = [
     {
-      id: "hotel-booking",
+      id: "novas-booking",
       icon: Building2,
       category: "enterprise",
       title: t('portfolio.item1.title'),
       isFeatured: true,
-      image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop",
+      image: "/novas.jpeg",
+      websiteUrl: "https://novasbooking.com/",
       data: {
         vision: t('portfolio.item1.visionText'),
         solution: t('portfolio.item1.solutionText'),
         payment: t('portfolio.item1.paymentText')
       },
-      tags: ["Next.js", "PostgreSQL", "Stripe", "Telebirr", "CBE Birr", "AWS"],
+      tags: ["Next.js", "PostgreSQL", "Real-time Booking", "Telebirr", "Stripe", "AWS"],
       borderLeftClass: "border-l-blue-600 dark:border-l-blue-500"
     },
     {
@@ -158,7 +159,7 @@ export default function PortfolioSection() {
           </div>
         </div>
 
-        {/* 1. FEATURED PROJECT (Next-Gen Hotel Ecosystem) */}
+        {/* 1. FEATURED PROJECT (Novas Booking) */}
         {featuredProject && (activeTab === 'all' || activeTab === 'enterprise') && (
           <motion.div
             id={featuredProject.id}
@@ -181,6 +182,18 @@ export default function PortfolioSection() {
                 <h3 className="text-2xl sm:text-3xl font-sans font-extrabold text-slate-900 dark:text-neutral-50 group-hover:text-blue-600 transition-colors">
                   {featuredProject.title}
                 </h3>
+
+                {'websiteUrl' in featuredProject && featuredProject.websiteUrl && (
+                  <a
+                    href={featuredProject.websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                  >
+                    <span>novasbooking.com</span>
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                )}
 
                 {/* Subsections: Vision, Solution, Payments */}
                 <div className="space-y-4">
@@ -228,57 +241,39 @@ export default function PortfolioSection() {
                 </div>
               </div>
 
-              {/* Right decorative premium visual illustration with real image */}
-              <div className="lg:col-span-5 h-[340px] sm:h-[380px] w-full rounded-xl bg-slate-50 dark:from-neutral-900 dark:to-neutral-950 border border-slate-100 dark:border-neutral-800/80 p-6 flex flex-col justify-between shadow-sm relative overflow-hidden">
-                <Image 
-                  src={featuredProject.image!}
-                  alt={featuredProject.title}
-                  fill
-                  sizes="(max-w-768px) 100vw, 40vw"
-                  className="object-cover opacity-10 group-hover:opacity-20 transition-all duration-700 pointer-events-none"
-                  referrerPolicy="no-referrer"
-                />
-                
-                <div className="flex items-center justify-between relative z-10">
-                  <div className="flex items-center space-x-2">
-                    <span className="flex h-2 w-2 relative">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
-                    </span>
-                    <span className="text-[10px] font-mono font-bold text-slate-700">Live booking_core_engine</span>
+              {/* Right: live site screenshot */}
+              <div className="lg:col-span-5 h-[360px] sm:h-[420px] w-full rounded-xl bg-slate-900 border border-slate-200 dark:border-neutral-800 shadow-lg relative overflow-hidden">
+                {/* Browser chrome */}
+                <div className="flex items-center justify-between px-4 py-2.5 bg-slate-800/95 border-b border-slate-700/80 relative z-20">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
                   </div>
-                  <Building2 className="h-5 w-5 text-blue-600" />
+                  <span className="text-[10px] font-mono text-slate-400 truncate px-3">novasbooking.com</span>
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded">Live Site</span>
                 </div>
 
-                {/* Simulated booking calendar dashboard interface representation */}
-                <div className="space-y-3 flex-1 mt-6 relative z-10">
-                  <div className="bg-white/95 dark:bg-neutral-900 border border-slate-150 dark:border-neutral-850 rounded-lg p-3 space-y-1.5 shadow-sm">
-                    <div className="flex justify-between items-center text-[10px] text-slate-400 font-mono">
-                      <span>Room availability</span>
-                      <span className="text-emerald-600 font-bold">100% active</span>
-                    </div>
-                    <div className="h-2 w-full bg-slate-100 dark:bg-neutral-800 rounded overflow-hidden">
-                      <div className="h-full w-full bg-gradient-to-r from-blue-600 to-indigo-600" />
-                    </div>
-                  </div>
+                <div className="relative flex-1 h-[calc(100%-40px)] bg-white">
+                  <Image
+                    src={featuredProject.image!}
+                    alt="Novas Booking landing page"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 40vw"
+                    className="object-cover object-top group-hover:scale-[1.01] transition-transform duration-700"
+                    priority
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/30 via-transparent to-transparent pointer-events-none" />
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-white/95 dark:bg-neutral-900 border border-slate-150 dark:border-neutral-800 rounded-lg p-3 space-y-1 shadow-sm">
-                      <span className="block text-[9px] text-slate-400 uppercase font-bold font-mono">Telemetry latency</span>
-                      <span className="block text-sm font-extrabold font-mono text-slate-900 dark:text-neutral-100">0.08s</span>
+                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between z-10">
+                    <div className="flex items-center gap-2 rounded-full bg-slate-950/70 backdrop-blur-sm px-3 py-1.5">
+                      <span className="flex h-2 w-2 relative">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                      </span>
+                      <span className="text-[10px] font-mono font-bold text-white/90">Captured from novasbooking.com</span>
                     </div>
-                    <div className="bg-white/95 dark:bg-neutral-900 border border-slate-150 dark:border-neutral-800 rounded-lg p-3 space-y-1 shadow-sm">
-                      <span className="block text-[9px] text-slate-400 uppercase font-bold font-mono">Payments sync</span>
-                      <span className="block text-xs font-bold text-blue-600 dark:text-blue-400 font-mono">SECURE</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Logos and accents in design */}
-                <div className="pt-4 border-t border-slate-200 dark:border-neutral-800/60 flex items-center justify-between text-[11px] font-mono text-slate-700 relative z-10 font-bold">
-                  <div className="flex items-center space-x-2">
-                    <span className="px-1.5 py-0.5 rounded bg-blue-600/10 text-blue-600 dark:text-blue-400 font-bold">W-STACK</span>
-                    <span>Global Gateway API</span>
+                    <Building2 className="h-4 w-4 text-amber-400 drop-shadow" />
                   </div>
                 </div>
               </div>

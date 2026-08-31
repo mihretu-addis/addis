@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Terminal, Github, Linkedin, MessageSquare, Heart } from 'lucide-react';
+import { Github, Linkedin, MessageSquare, Heart } from 'lucide-react';
 import Link from 'next/link';
+import BrandLogo from '@/components/BrandLogo';
 
 export default function Footer() {
   const { t } = useTranslation();
@@ -19,16 +20,7 @@ export default function Footer() {
           
           {/* Logo / Branding */}
           <div className="md:col-span-5 space-y-4">
-            <Link 
-              id="footer-logo"
-              href="/"
-              className="flex items-center space-x-2 text-xl font-bold tracking-tight text-white"
-            >
-              <div id="footer-logo-box" className="p-2 rounded-lg bg-white/10 border border-white/15 text-amber-400">
-                <Terminal className="h-5 w-5" />
-              </div>
-              <span id="footer-logo-text">Addis<span className="text-amber-400">Tech</span></span>
-            </Link>
+            <BrandLogo id="footer-logo" />
             
             <p className="text-sm font-sans max-w-sm leading-relaxed text-blue-100 dark:text-neutral-400" id="footer-slogan">
               {t('footer.slogan')}
