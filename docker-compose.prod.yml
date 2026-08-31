@@ -1,0 +1,27 @@
+services:
+  web:
+    image: ${APP_IMAGE:?APP_IMAGE is required}
+    container_name: ${DEPLOY_CONTAINER_NAME:-addis-tach-web}
+    env_file:
+      - .env
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-3030}:3000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "require('http').get('http://127.0.0.1:3000/', (r) => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    networks:
+      - novas-network
+
+networks:
+  novas-network:
+    external: true

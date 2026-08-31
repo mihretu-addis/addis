@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  --color-blue-50: #f2f6fa;
+  --color-blue-100: #e5f0fc;
+  --color-blue-200: #b3d4f8;
+  --color-blue-300: #80b9f3;
+  --color-blue-400: #006ce4;
+  --color-blue-500: #0056b3;
+  --color-blue-600: #003b95;
+  --color-blue-700: #002e75;
+  --color-blue-800: #002256;
+  --color-blue-900: #001637;
+  --color-blue-950: #000c1d;
+
+  --color-indigo-50: #fff9e6;
+  --color-indigo-100: #fff2cc;
+  --color-indigo-200: #ffe699;
+  --color-indigo-300: #ffd966;
+  --color-indigo-400: #febb02; /* Booking orange/gold accent */
+  --color-indigo-500: #febb02;
+  --color-indigo-600: #e0a500;
+  --color-indigo-700: #b38400;
+  --color-indigo-800: #805e00;
+  --color-indigo-900: #4d3800;
+
+  --color-amber-50: #fff9e6;
+  --color-amber-100: #fff2cc;
+  --color-amber-200: #ffe699;
+  --color-amber-300: #ffd966;
+  --color-amber-400: #febb02; /* Booking signature gold/yellow */
+  --color-amber-500: #febb02;
+  --color-amber-600: #e0a500;
+  --color-amber-700: #b38400;
+  --color-amber-800: #805e00;
+
+  --color-yellow-400: #febb02;
+  --color-yellow-500: #febb02;
+
+  --color-slate-50: #f2f6fa;
+  --color-slate-100: #eef2f6;
+  --color-slate-200: #dae1e9;
+  --color-slate-350: #b1b9c2;
+  --color-slate-500: #333333;
+  --color-slate-600: #262626;
+  --color-slate-700: #1a1a1a;
+  --color-slate-800: #0f0f0f;
+  --color-slate-900: #000c1e;
+  --color-slate-950: #00030a;
+
+  --color-neutral-50: #fbfbfb;
+  --color-neutral-100: #f3f3f3;
+  --color-neutral-200: #e1e1e1;
+  --color-neutral-300: #cfcfcf;
+  --color-neutral-400: #a7a7a7;
+  --color-neutral-500: #626262;
+  --color-neutral-600: #3f3f3f;
+  --color-neutral-700: #1a1b1c;
+  --color-neutral-800: #00122e; /* Dark Booking card bg style */
+  --color-neutral-850: #001a3d;
+  --color-neutral-900: #00112b; /* Deep booking navy mode bg style */
+  --color-neutral-950: #000b1a; /* Ultimate booking dark canvas bg style */
+}
+
+@variant dark (&:where(.dark, .dark *));
+
