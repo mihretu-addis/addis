@@ -9,6 +9,9 @@ RUN npm ci
 
 COPY . .
 
+# Next.js expects public/; this repo may not have one — ensure it exists for the runtime COPY.
+RUN mkdir -p public
+
 # NEXT_PUBLIC_* must be present at build time for Next.js.
 # Pass these via --build-arg / compose build.args (do not COPY .env in CI).
 ARG NEXT_PUBLIC_API_URL
