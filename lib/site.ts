@@ -25,6 +25,13 @@ export const siteConfig = {
     city: "Addis Ababa",
     country: "Ethiopia",
   },
+  /** Addis Tech mark — used for Open Graph / Twitter cards */
+  ogImage: {
+    path: "/logo-2.png",
+    width: 1333,
+    height: 1333,
+    alt: "Addis Tech Logo",
+  },
   keywords: [
     "Addis Tech",
     "software development Ethiopia",

@@ -20,6 +20,13 @@ export function createPageMetadata({
       ? siteConfig.title
       : `${title} | ${siteConfig.name}`;
 
+  const ogImage = {
+    url: siteConfig.ogImage.path,
+    width: siteConfig.ogImage.width,
+    height: siteConfig.ogImage.height,
+    alt: siteConfig.ogImage.alt,
+  };
+
   return {
     title: fullTitle,
     description,
@@ -31,6 +38,10 @@ export function createPageMetadata({
     alternates: {
       canonical: url,
     },
+    icons: {
+      icon: siteConfig.ogImage.path,
+      apple: siteConfig.ogImage.path,
+    },
     openGraph: {
       type: "website",
       locale: siteConfig.locale,
@@ -38,12 +49,14 @@ export function createPageMetadata({
       siteName: siteConfig.name,
       title: fullTitle,
       description,
+      images: [ogImage],
     },
     twitter: {
       card: "summary_large_image",
       title: fullTitle,
       description,
       creator: siteConfig.twitterHandle,
+      images: [siteConfig.ogImage.path],
     },
     robots: {
       index: true,
