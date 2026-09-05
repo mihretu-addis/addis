@@ -1,5 +1,5 @@
-import type { Metadata } from 'next';
-import { siteConfig } from './site';
+import type { Metadata } from "next";
+import { siteConfig } from "./site";
 
 type PageSeo = {
   title: string;
@@ -11,11 +11,14 @@ type PageSeo = {
 export function createPageMetadata({
   title,
   description,
-  path = '',
+  path = "",
   keywords = [],
 }: PageSeo): Metadata {
   const url = `${siteConfig.url}${path}`;
-  const fullTitle = path === '' || path === '/' ? siteConfig.title : `${title} | ${siteConfig.name}`;
+  const fullTitle =
+    path === "" || path === "/"
+      ? siteConfig.title
+      : `${title} | ${siteConfig.name}`;
 
   return {
     title: fullTitle,
@@ -29,7 +32,7 @@ export function createPageMetadata({
       canonical: url,
     },
     openGraph: {
-      type: 'website',
+      type: "website",
       locale: siteConfig.locale,
       url,
       siteName: siteConfig.name,
@@ -37,7 +40,7 @@ export function createPageMetadata({
       description,
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: fullTitle,
       description,
       creator: siteConfig.twitterHandle,
@@ -48,8 +51,8 @@ export function createPageMetadata({
       googleBot: {
         index: true,
         follow: true,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
       },
     },
   };

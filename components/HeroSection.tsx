@@ -1,197 +1,240 @@
-'use client';
+import { Eyebrow } from "./ui/Eyebrow";
+import { PillButton } from "./ui/PillButton";
 
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { ArrowRight, Star, Shield, Activity, Code } from 'lucide-react';
-import { motion } from 'motion/react';
-import Link from 'next/link';
-
-export default function HeroSection() {
-  const { t } = useTranslation();
-
+function Actions() {
   return (
-    <section
-      id="home"
-      className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden bg-gradient-to-br from-blue-500 to-blue-700 dark:from-neutral-900 dark:to-neutral-950 text-white transition-colors duration-300"
+    <div
+      className="content-stretch flex gap-[8px] md:gap-[16px] items-start relative shrink-0 w-full"
+      data-name="Actions"
     >
-      {/* Background glowing rings / grids */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-40 dark:opacity-75">
-        <motion.div 
-          id="glow-circle-1" 
-          animate={{
-            scale: [1, 1.1, 0.9, 1],
-            x: [0, 40, -20, 0],
-            y: [0, -30, 20, 0],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] rounded-full bg-blue-400/20 dark:bg-blue-500/10 blur-[130px]" 
-        />
-        <motion.div 
-          id="glow-circle-2" 
-          animate={{
-            scale: [1, 0.9, 1.1, 1],
-            x: [0, -30, 40, 0],
-            y: [0, 40, -30, 0],
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="absolute -bottom-[10%] -right-[10%] w-[60%] h-[60%] rounded-full bg-indigo-400/20 dark:bg-indigo-500/10 blur-[130px]" 
-        />
-        
-        {/* Floating abstract decorative micro-particles */}
-        <motion.div
-          animate={{ y: [0, -15, 0], opacity: [0.2, 0.4, 0.2] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[20%] right-[25%] w-3 h-3 rounded-full bg-blue-300/40 blur-[1px]"
-        />
-        <motion.div
-          animate={{ y: [0, 20, 0], opacity: [0.15, 0.35, 0.15] }}
-          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          className="absolute bottom-[30%] left-[15%] w-4 h-4 rounded-full bg-indigo-300/40 blur-[1px]"
-        />
+      <PillButton label="Explore Services" variant="outline" href="#services" />
+      <PillButton label="Consult Our Experts" href="#contact" />
+    </div>
+  );
+}
 
-        {/* Fine grid overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(255,255,255,0.03)_1.5px,transparent_1.5px)] bg-[size:32px_32px] pointer-events-none opacity-40 dark:opacity-30" />
+function HeroDetails() {
+  return (
+    <div
+      className="col-[1/span_7] md:col-[1/span_7] content-stretch flex flex-col gap-[24px] md:gap-[32px] items-start justify-self-stretch relative row-1 self-start shrink-0"
+      data-name="Hero Details"
+    >
+      <Eyebrow>{`Empowering East Africa's Digital Renaissance`}</Eyebrow>
+      <p className="[word-break:break-word] font-['Outfit:Bold',sans-serif] font-bold leading-[0] min-w-full relative shrink-0 text-[34px] md:text-[58px] text-white w-[min-content]">
+        <span className="leading-[1.2]">{`Engineering High-Performance `}</span>
+        <span className="leading-[1.2] text-[#ffa600]">Digital Solutions</span>
+      </p>
+      <p className="[word-break:break-word] font-['Outfit:Regular',sans-serif] font-normal leading-[1.6] min-w-full relative shrink-0 text-[#e5f0fc] text-[15px] md:text-[18px] w-[min-content]">
+        Founded in 2021 in Addis Ababa, AddisTech transforms complex business
+        visions into scalable, market-ready technology. We bridge regional
+        potential with global engineering standards.
+      </p>
+      <Actions />
+    </div>
+  );
+}
+
+function WindowControls() {
+  return (
+    <div
+      className="content-stretch flex gap-[6px] md:gap-[8px] items-start relative shrink-0"
+      data-name="Window Controls"
+    >
+      <div
+        className="bg-[#ff6467] relative rounded-[100px] shrink-0 size-[10px] md:size-[12px]"
+        data-name="Rectangle"
+      />
+      <div
+        className="bg-[#ffa600] relative rounded-[100px] shrink-0 size-[10px] md:size-[12px]"
+        data-name="Rectangle"
+      />
+      <div
+        className="bg-[#06a225] relative rounded-[100px] shrink-0 size-[10px] md:size-[12px]"
+        data-name="Rectangle"
+      />
+    </div>
+  );
+}
+
+function MockupHeader() {
+  return (
+    <div
+      className="content-stretch flex items-center justify-between p-[12px] md:p-[16px] relative shrink-0 w-full"
+      data-name="Mockup Header"
+    >
+      <div
+        aria-hidden
+        className="absolute border-[rgba(255,255,255,0.1)] border-b border-solid inset-0 pointer-events-none"
+      />
+      <WindowControls />
+      <p className="[word-break:break-word] font-['Outfit:SemiBold',sans-serif] font-semibold leading-[normal] relative shrink-0 text-[#b3d4f8] text-[12px] whitespace-nowrap">
+        addistech_runtime_v2.sh
+      </p>
+    </div>
+  );
+}
+
+function MockupCode() {
+  return (
+    <div
+      className="[word-break:break-word] content-stretch flex flex-col font-['Outfit:Regular',sans-serif] font-normal gap-[8px] md:gap-[12px] items-start p-[16px] md:p-[24px] relative shrink-0 text-[12px] md:text-[14px] w-full"
+      data-name="Mockup Code"
+    >
+      <p className="leading-[normal] relative shrink-0 text-[#ffa600] w-full">{`const addisTechInstance = {`}</p>
+      <p className="leading-[normal] relative shrink-0 text-white w-full whitespace-pre-wrap">{`  headquarters: "Addis Ababa, ET",`}</p>
+      <p className="leading-[0] relative shrink-0 text-white w-full whitespace-pre-wrap">
+        <span className="leading-[normal]">{`  founded: `}</span>
+        <span className="leading-[normal] text-[#ffa600]">2021</span>
+        <span className="leading-[normal]">,</span>
+      </p>
+      <p className="leading-[normal] relative shrink-0 text-white w-full whitespace-pre-wrap">{`  vision: "Transforming regional potential to global standards",`}</p>
+      <p className="leading-[normal] relative shrink-0 text-white w-full whitespace-pre-wrap">{`  architectures: ["Ecosystems", "High-Performance", "Scalability"]`}</p>
+      <p className="leading-[normal] relative shrink-0 text-[#ffa600] w-full">{`};`}</p>
+    </div>
+  );
+}
+
+function Frame1() {
+  return (
+    <div
+      className="content-stretch flex gap-[8px] items-center relative shrink-0"
+      data-name="Frame"
+    >
+      <div
+        className="bg-[#06a225] relative rounded-[100px] shrink-0 size-[8px]"
+        data-name="Rectangle"
+      />
+      <p className="[word-break:break-word] font-['Outfit:Regular',sans-serif] font-normal leading-[normal] relative shrink-0 text-[#b3d4f8] text-[11px] whitespace-nowrap">{`System Synced: Latency < 0.1s`}</p>
+    </div>
+  );
+}
+
+function MockupFooter() {
+  return (
+    <div
+      className="content-stretch flex items-center justify-between p-[10px] md:p-[16px] relative shrink-0 w-full"
+      data-name="Mockup Footer"
+    >
+      <div
+        aria-hidden
+        className="absolute border-[rgba(255,255,255,0.1)] border-solid border-t inset-0 pointer-events-none"
+      />
+      <Frame1 />
+    </div>
+  );
+}
+
+function MockupFrame() {
+  return (
+    <div
+      className="backdrop-blur-[6px] bg-[rgba(255,255,255,0.05)] hidden md:block col-[8/span_5] h-[440px] justify-self-stretch relative rounded-[12px] row-1 shrink-0"
+      data-name="Mockup Frame"
+    >
+      <div className="content-stretch flex flex-col items-start overflow-clip relative rounded-[inherit] size-full">
+        <MockupHeader />
+        <MockupCode />
+        <MockupFooter />
       </div>
+      <div
+        aria-hidden
+        className="absolute border border-[rgba(255,255,255,0.1)] border-solid inset-0 pointer-events-none rounded-[12px] shadow-[0px_25px_50px_-12px_rgba(0,0,0,0.25)]"
+      />
+    </div>
+  );
+}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          
-          {/* Hero Left Content */}
-          <div className="lg:col-span-7 space-y-8 text-center lg:text-left">
-            <motion.div
-              id="hero-badge-container"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: 'easeOut' }}
-              className="inline-flex items-center space-x-2 bg-white/10 dark:bg-blue-900/30 border border-white/20 dark:border-blue-800 text-amber-300 dark:text-blue-300 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider"
-            >
-              <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-              <span>{t('hero.badge')}</span>
-            </motion.div>
+function HeroSplitGrid() {
+  return (
+    <div
+      className="gap-x-[48px] gap-y-[32px] md:gap-y-[48px] grid grid-cols-[repeat(12,minmax(0,1fr))] grid-rows-[repeat(1,fit-content(100%))] relative shrink-0 w-full"
+      data-name="Hero Split Grid"
+    >
+      <HeroDetails />
+      <MockupFrame />
+    </div>
+  );
+}
 
-            <motion.div
-              id="hero-headings"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
-              className="space-y-4"
-            >
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-sans font-extrabold tracking-tight text-white leading-tight">
-                {t('hero.title')}{' '}
-                <span className="text-amber-400">
-                  {t('hero.titleAccent')}
-                </span>
-              </h1>
-              <p className="text-base sm:text-lg text-blue-100 dark:text-neutral-300 max-w-2xl mx-auto lg:mx-0 font-sans leading-relaxed">
-                {t('hero.description')}
-              </p>
-            </motion.div>
+function StatItem() {
+  return (
+    <div
+      className="[word-break:break-word] content-stretch flex flex-[1_0_0] flex-col font-['Outfit:Bold',sans-serif] font-bold gap-[4px] md:gap-[8px] items-center md:items-start min-w-px justify-center relative"
+      data-name="Stat Item 1"
+    >
+      <p className="leading-[1.25] relative shrink-0 text-[#ffa600] text-[28px] md:text-[36px] w-full text-center md:text-left">
+        45+
+      </p>
+      <p className="leading-[normal] relative shrink-0 text-[#e5f0fc] text-[11px] uppercase w-full text-center md:text-left">
+        Enterprise Projects Completed
+      </p>
+    </div>
+  );
+}
 
-            <motion.div
-              id="hero-ctas"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
-            >
-              <Link
-                id="hero-cta-btn-primary"
-                href="/contact"
-                className="w-full sm:w-auto px-8 py-3.5 bg-amber-400 hover:bg-amber-500 text-blue-950 font-bold rounded shadow-md hover:shadow-lg transition-all flex items-center justify-center space-x-2 group"
-              >
-                <span>{t('hero.ctaPrimary')}</span>
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-              <Link
-                id="hero-cta-btn-secondary"
-                href="/portfolio"
-                className="w-full sm:w-auto px-8 py-3.5 bg-blue-700/50 hover:bg-blue-700 text-white border border-white/25 rounded font-bold transition-all flex items-center justify-center"
-              >
-                {t('hero.ctaSecondary')}
-              </Link>
-            </motion.div>
+function StatItem1() {
+  return (
+    <div
+      className="[word-break:break-word] content-stretch flex flex-[1_0_0] flex-col font-['Outfit:Bold',sans-serif] font-bold gap-[4px] md:gap-[8px] items-center md:items-start min-w-px justify-center relative"
+      data-name="Stat Item 2"
+    >
+      <p className="leading-[1.25] relative shrink-0 text-[28px] md:text-[36px] text-white w-full text-center md:text-left">
+        5+
+      </p>
+      <p className="leading-[normal] relative shrink-0 text-[#e5f0fc] text-[11px] uppercase w-full text-center md:text-left">
+        Years of Engineering Excellence
+      </p>
+    </div>
+  );
+}
 
-            {/* Quick Metrics (Bento-style layout in columns info) */}
-            <motion.div
-              id="hero-quick-metrics"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="grid grid-cols-3 gap-4 pt-4 border-t border-white/10 dark:border-neutral-800/70"
-            >
-              <div className="text-center lg:text-left">
-                <p className="text-2xl sm:text-3xl font-bold font-mono text-amber-400">45+</p>
-                <p className="text-[10px] sm:text-xs text-blue-100 dark:text-neutral-400 font-medium tracking-wide mt-1 uppercase">
-                  {t('hero.statsCompleted')}
-                </p>
-              </div>
-              <div className="text-center lg:text-left">
-                <p className="text-2xl sm:text-3xl font-bold font-mono text-white">5+</p>
-                <p className="text-[10px] sm:text-xs text-blue-100 dark:text-neutral-400 font-medium tracking-wide mt-1 uppercase">
-                  {t('hero.statsYears')}
-                </p>
-              </div>
-              <div className="text-center lg:text-left">
-                <p className="text-2xl sm:text-3xl font-bold font-mono text-amber-400">99.9%</p>
-                <p className="text-[10px] sm:text-xs text-blue-100 dark:text-neutral-400 font-medium tracking-wide mt-1 uppercase">
-                  {t('hero.statsReliability')}
-                </p>
-              </div>
-            </motion.div>
-          </div>
+function StatItem2() {
+  return (
+    <div
+      className="[word-break:break-word] content-stretch flex flex-[1_0_0] flex-col font-['Outfit:Bold',sans-serif] font-bold gap-[4px] md:gap-[8px] items-center md:items-start min-w-px justify-center relative"
+      data-name="Stat Item 3"
+    >
+      <p className="leading-[1.25] relative shrink-0 text-[#ffa600] text-[28px] md:text-[36px] w-full text-center md:text-left">
+        99.9%
+      </p>
+      <p className="leading-[normal] relative shrink-0 text-[#e5f0fc] text-[11px] uppercase w-full text-center md:text-left">{`Uptime & Scalability Reliability`}</p>
+    </div>
+  );
+}
 
-          {/* Hero Right Visual Column */}
-          <div className="lg:col-span-5 relative flex justify-center items-center">
-            <motion.div
-              id="hero-tech-illustration"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              whileHover={{ y: -6, scale: 1.02 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative w-full max-w-[340px] sm:max-w-[420px] aspect-square rounded-xl overflow-hidden bg-white/5 backdrop-blur-md border border-white/10 dark:bg-neutral-900/80 dark:border-neutral-800/80 p-6 flex flex-col justify-between shadow-2xl"
-            >
-              {/* Geometric elements / Tech-focused terminal card style */}
-              <div className="flex items-center justify-between border-b border-white/10 dark:border-neutral-800 pb-4">
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 rounded-full bg-red-400" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-400" />
-                  <div className="w-3 h-3 rounded-full bg-green-400" />
-                </div>
-                <div className="font-mono text-[10px] text-blue-200 dark:text-neutral-500">addistech_runtime_v2.sh</div>
-              </div>
+function StatBar() {
+  return (
+    <div
+      className="content-stretch flex items-start justify-center md:justify-start pt-[24px] md:pt-[40px] gap-[20px] relative shrink-0 w-full"
+      data-name="Stat Bar"
+    >
+      <div
+        aria-hidden
+        className="absolute border-[rgba(255,255,255,0.1)] border-solid border-t inset-0 pointer-events-none"
+      />
+      <StatItem />
+      <StatItem1 />
+      <StatItem2 />
+    </div>
+  );
+}
 
-              <div id="hero-code-snippet" className="flex-1 py-6 flex flex-col justify-center font-mono text-xs sm:text-sm space-y-3 text-white dark:text-neutral-300">
-                <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="text-amber-400">const addisTechInstance = {`{`}</motion.p>
-                <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 }} className="pl-4">headquarters: <span className="text-blue-105">&quot;Addis Ababa, ET&quot;</span>,</motion.p>
-                <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.9 }} className="pl-4">founded: <span className="text-amber-400">2021</span>,</motion.p>
-                <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.1 }} className="pl-4">vision: <span className="text-blue-105">&quot;Transforming Ideas to Reality&quot;</span>,</motion.p>
-                <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.3 }} className="pl-4">architectures: [<span className="text-blue-200">&quot;Ecosystems&quot;</span>, <span className="text-blue-200">&quot;Scalability&quot;</span>]</motion.p>
-                <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.5 }} className="text-amber-400">{`};`}</motion.p>
-              </div>
-
-              <div className="border-t border-white/10 dark:border-neutral-800 pt-4 flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <span className="flex h-2 w-2 relative">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400"></span>
-                  </span>
-                  <span className="text-[10px] font-mono text-blue-200">System Synced: Latency &lt;0.1s</span>
-                </div>
-                <Code className="h-4 w-4 text-blue-100 dark:text-neutral-500" />
-              </div>
-            </motion.div>
-          </div>
-
-        </div>
-      </div>
-    </section>
+export function HeroSection() {
+  return (
+    <div
+      id="about"
+      className="bg-gradient-to-r content-stretch flex flex-col from-[#1b1464] gap-[32px] md:gap-[64px] items-start overflow-clip px-[20px] md:px-12 lg:px-16 xl:px-20 py-[40px] md:py-[120px] relative shrink-0 to-[#0b0642] w-full scroll-mt-[68px]"
+      data-name="Hero Section"
+    >
+      <div
+        className="absolute bg-[rgba(0,108,228,0.15)] md:bg-[rgba(0,108,228,0.2)] blur-[40px] md:blur-[65px] h-[300px] md:h-[600px] left-[-100px] md:left-[-200px] rounded-[16777200px] top-[-50px] md:top-[-100px] w-[300px] md:w-[1200px]"
+        data-name="Rectangle"
+      />
+      <div
+        className="absolute bg-[rgba(255,166,0,0.11)] blur-[40px] md:blur-[65px] bottom-[-50px] md:bottom-[-100px] h-[250px] md:h-[500px] right-[-75px] md:right-[-150px] rounded-[16777200px] w-[500px] md:w-[1000px]"
+        data-name="Rectangle"
+      />
+      <HeroSplitGrid />
+      <StatBar />
+    </div>
   );
 }
