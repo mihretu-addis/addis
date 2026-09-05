@@ -1,3 +1,5 @@
+name: addis-tach-web
+
 services:
   web:
     image: ${APP_IMAGE:?APP_IMAGE is required}

@@ -1,5 +1,6 @@
 # Production deploy only — push to main, dev.
 # Nginx proxies host port 3030 → container 3000.
+# Isolated Compose project: addis-tach-web (never touches novastech-landing).
 #
 # Required repository secrets:
 #   SSH_HOST, SSH_USERNAME, SSH_KEY
@@ -26,6 +27,7 @@ concurrency:
 env:
   REGISTRY: ghcr.io
   APP_PORT: "3030"
+  COMPOSE_PROJECT: addis-tach-web
   DEFAULT_PROJECT_FOLDER: /opt/addis-tach-web
 
 jobs:
@@ -85,9 +87,16 @@ jobs:
       - name: Set deploy variables
         run: |
           repo_lower="$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')"
+          project_dir="${{ secrets.PROJECT_FOLDER || env.DEFAULT_PROJECT_FOLDER }}"
+          case "${project_dir}" in
+            */novastech-landing|*/novastech-landing/|/opt/novastech-landing|/opt/novastech-landing/)
+              echo "Refusing to deploy into NovaTech path: ${project_dir}"
+              exit 1
+              ;;
+          esac
           echo "APP_IMAGE=ghcr.io/${repo_lower}:${GITHUB_SHA}" >> "${GITHUB_ENV}"
           echo "GHCR_USER=${{ github.actor }}" >> "${GITHUB_ENV}"
-          echo "PROJECT_DIR=${{ secrets.PROJECT_FOLDER || env.DEFAULT_PROJECT_FOLDER }}" >> "${GITHUB_ENV}"
+          echo "PROJECT_DIR=${project_dir}" >> "${GITHUB_ENV}"
 
       - name: Copy compose file to server
         uses: appleboy/scp-action@v0.1.7
@@ -109,10 +118,19 @@ jobs:
           port: ${{ secrets.SSH_PORT || '22' }}
           key: ${{ secrets.SSH_KEY }}
           command_timeout: 10m
-          envs: APP_IMAGE,GHCR_USER,GHCR_TOKEN,APP_PORT
+          envs: APP_IMAGE,GHCR_USER,GHCR_TOKEN,APP_PORT,COMPOSE_PROJECT
           script: |
             set -euo pipefail
             FOLDER="${{ secrets.PROJECT_FOLDER || env.DEFAULT_PROJECT_FOLDER }}"
+            COMPOSE_PROJECT="${COMPOSE_PROJECT:-addis-tach-web}"
+
+            case "${FOLDER}" in
+              */novastech-landing|*/novastech-landing/|/opt/novastech-landing|/opt/novastech-landing/)
+                echo "Refusing to operate in NovaTech path: ${FOLDER}"
+                exit 1
+                ;;
+            esac
+
             mkdir -p "${FOLDER}"
             cd "${FOLDER}"
 
@@ -131,6 +149,7 @@ jobs:
             fi
 
             export APP_IMAGE APP_PORT
-            docker compose up -d --pull always --force-recreate
-            docker image prune -f
-            echo "Deployed ${APP_IMAGE} on port ${APP_PORT}"
+            # Scoped to this Compose project only — never docker compose down,
+            # docker rm/stop of other containers, or host-wide prune.
+            docker compose -p "${COMPOSE_PROJECT}" up -d --pull always --force-recreate
+            echo "Deployed ${APP_IMAGE} as ${COMPOSE_PROJECT} on port ${APP_PORT}"
