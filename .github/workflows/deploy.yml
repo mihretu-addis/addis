@@ -1,4 +1,4 @@
-# Production deploy only — push to main.
+# Production deploy only — push to main, dev.
 # Nginx proxies host port 3030 → container 3000.
 #
 # Required repository secrets:
@@ -15,9 +15,9 @@ name: Deploy Website
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
   pull_request:
-    branches: [main]
+    branches: [main, dev]
 
 concurrency:
   group: deploy-${{ github.ref }}
