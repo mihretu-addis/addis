@@ -2,7 +2,10 @@
 
 import { useEffect } from "react";
 
-/** Unregisters leftover service workers (e.g. from a prior Vite app on :3000). */
+/**
+ * Clears leftover service workers / caches from older builds (e.g. Vite PWA)
+ * so they cannot serve stale assets over this Next.js site.
+ */
 export function ClearStaleServiceWorker() {
   useEffect(() => {
     if (!("serviceWorker" in navigator)) {
